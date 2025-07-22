@@ -4,6 +4,7 @@ namespace Archuniverse
     public class Character : Base
     {
         public string Name { get; set; }
+        public Sex Gender { get; set; }
         public int Health { get; set; }
         public int Mana { get; set; }
         public int Stamina { get; set; }
@@ -14,11 +15,20 @@ namespace Archuniverse
         public Weapon? EquippedWeapon { get; set; }
         public Armor? EquippedArmor { get; set; }
 
+        public enum Sex
+        {
+            Female, Male
+        }
 
+        public enum TransferResult
+        {
+            InsufficientGold, ItemIsNotOwned, Success
+        }
 
-        public Character(string name, int health, int mana, int stamina, int gold, int xp, int level)
+        public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, int level)
         {
             Name = name;
+            Gender = gender;
             Health = health;
             Mana = mana;
             Stamina = stamina;
@@ -70,13 +80,52 @@ namespace Archuniverse
             item.Owner = null;
         }
 
-        public void TransferItem(Item item, Character other)
+        public TransferResult TransferItem(Item item, Character other)
         {
             if (!Inventory.Contains(item))
-                return;
+                return TransferResult.ItemIsNotOwned;
 
             Inventory.Remove(item);
             other.AddItem(item);
+            return TransferResult.Success;
+        }
+
+        public TransferResult TransferGold(int goldAmount, Character other)
+        {
+            if (Gold - goldAmount < 0)
+                return TransferResult.InsufficientGold;
+
+            Gold -= goldAmount;
+            other.Gold += goldAmount;
+            return TransferResult.Success;
+        }
+
+        public TransferResult SellItem(Item item, int goldAmount, Character other)
+        {
+            if (other.Gold - goldAmount < 0)
+                return TransferResult.InsufficientGold;
+
+            if (!Inventory.Contains(item))
+                return TransferResult.ItemIsNotOwned;
+
+            Inventory.Remove(item);
+            other.AddItem(item);
+            other.TransferGold(goldAmount, this);
+            return TransferResult.Success;
+        }
+
+        public TransferResult BuyItem(Item item, int goldAmount, Character other)
+        {
+            if (Gold - goldAmount < 0)
+                return TransferResult.InsufficientGold;
+
+            if (!other.Inventory.Contains(item))
+                return TransferResult.ItemIsNotOwned;
+
+            other.Inventory.Remove(item);
+            AddItem(item);
+            TransferGold(goldAmount, other);
+            return TransferResult.Success;
         }
 
     }
