@@ -12,7 +12,29 @@
         {
             if (Owner != null)
             {
-                Owner.EquipWeapon(this);
+                if (!Owner.Inventory.Contains(this))
+                    return;
+
+
+                if (Owner.EquippedWeapon != null)
+                {
+                    Owner.Inventory.Add(Owner.EquippedWeapon);
+                }
+
+                Owner.EquippedWeapon = this;
+                Owner.Inventory.Remove(this);
+            }
+        }
+
+        public override void Unequip()
+        {
+            if (Owner != null)
+            {
+                if (Owner.Inventory.Contains(this) && Owner.EquippedWeapon != this)
+                    return;
+
+                Owner.EquippedArmor = null;
+                Owner.Inventory.Add(this);
             }
         }
 

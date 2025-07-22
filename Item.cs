@@ -36,5 +36,9 @@
 
         }
 
+        public virtual void Unequip()
+        {
+            
+        }
     }
 }

@@ -16,6 +16,12 @@
 
             Izroth.Equip(TurtoiseArmor);
             Lila.Equip(EternalSword);
+
+            Izroth.Unequip(TurtoiseArmor);
+            Izroth.TransferItem(TurtoiseArmor, Lila);
+
+            Lila.Equip(TurtoiseArmor);
+            
         }
     }
 }

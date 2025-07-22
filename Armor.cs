@@ -16,7 +16,29 @@ namespace Archuniverse
         {
             if (Owner != null)
             {
-                Owner.EquipArmor(this);
+                if (!Owner.Inventory.Contains(this))
+                    return;
+
+
+                if (Owner.EquippedArmor != null)
+                {
+                    Owner.Inventory.Add(Owner.EquippedArmor);
+                }
+
+                Owner.EquippedArmor = this;
+                Owner.Inventory.Remove(this);
+            }
+        }
+
+        public override void Unequip()
+        {
+            if (Owner != null)
+            {
+                if (Owner.Inventory.Contains(this) && Owner.EquippedArmor != this)
+                    return;
+
+                Owner.EquippedArmor = null;
+                Owner.Inventory.Add(this);
             }
         }
 

@@ -44,6 +44,14 @@ namespace Archuniverse
             item.Equip();
         }
 
+        public void Unequip(Item item)
+        {
+            if (Inventory.Contains(item) || item.Owner != this)
+                return;
+
+            item.Unequip();
+        }
+
         public void AddItem(Item item)
         {
             if (Inventory.Contains(item))
@@ -69,38 +77,6 @@ namespace Archuniverse
 
             Inventory.Remove(item);
             other.AddItem(item);
-        }
-
-        public void EquipWeapon(Weapon weapon)
-        {
-
-            if (!Inventory.Contains(weapon))
-                return;
-
-
-            if (EquippedWeapon != null)
-            {
-                Inventory.Add(EquippedWeapon);
-            }
-
-            EquippedWeapon = weapon;
-            Inventory.Remove(EquippedWeapon);
-        }
-
-        public void EquipArmor(Armor armor)
-        {
-
-            if (!Inventory.Contains(armor))
-                return;
-
-
-            if (EquippedArmor != null)
-            {
-                Inventory.Add(EquippedArmor);
-            }
-
-            EquippedArmor = armor;
-            Inventory.Remove(EquippedArmor);
         }
 
     }
