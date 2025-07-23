@@ -45,15 +45,27 @@ namespace Archuniverse
             // Combat begins
             CombatManager combatManager = new();
 
-            combatManager.NewCombat(Lila, Izroth);<
+            combatManager.NewCombat(Lila, Izroth);
             combatManager.FinishAllCombats();
 
-            Console.WriteLine($"{Izroth.Name} is {(Izroth.IsDead? "dead" : "alive")}.");
+            Console.WriteLine($"{Izroth.Name} is {(Izroth.IsDead ? "dead" : "alive")}.");
             Console.WriteLine($"{Lila.Name} is {(Lila.IsDead ? "dead" : "alive")}.");
 
             Console.WriteLine($"{Izroth.Name}'s Health: {Izroth.Health}");
             Console.WriteLine($"{Lila.Name}'s Health: {Lila.Health}");
 
+            GameLoop.Instance.RegisterTickable(Izroth);
+            GameLoop.Instance.RegisterTickable(Lila);
+
+            Task.Run(() => GameLoop.Instance.Run());
+
+            while (true)
+            {
+                Console.WriteLine("*********************");
+                Izroth.Print();
+                Lila.Print();
+                Thread.Sleep(1000); // print every second
+            }
 
         }
     }

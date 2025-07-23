@@ -1,7 +1,7 @@
 ﻿
 namespace Archuniverse.Characters
 {
-    public class LivingEntity : Base
+    public class LivingEntity : Base, ITickable
     {
         public string Name { get; set; }
         public int Health
@@ -116,5 +116,21 @@ namespace Archuniverse.Characters
         {
             return 100 * level * level;
         }
+
+
+        // Time related stuff here
+        public void Tick(float deltaTime)
+        {
+            _regenTimer += deltaTime;
+            if (_regenTimer >= 1.0f)
+            {
+                RegenerateVitals();
+                _regenTimer = 0f;
+            }
+
+            // tick the skill tree if needed in future
+        }
+
+        private float _regenTimer = 0f;
     }
 }

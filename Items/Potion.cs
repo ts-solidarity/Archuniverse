@@ -1,7 +1,7 @@
 ﻿
 namespace Archuniverse.Items
 {
-    public class Potion : Item
+    public class Potion : Item, ITickable
     {
         public Potion(string name, Grade grade, int worth,
             int healthBoost, int manaBoost, int staminaBoost,
@@ -19,6 +19,9 @@ namespace Archuniverse.Items
         public int StaminaBoost { get; set; }
         public int EffectTime { get; set; }
         public bool InEffect { get; set; } = false;
+        
+        private float _elapsedTime = 0f;
+
 
         public override void Use()
         {
@@ -30,15 +33,28 @@ namespace Archuniverse.Items
                 ApplySpecialEffects();
 
                 InEffect = true;
-                StartCountdown();
+                Used = true;
+
 
                 Owner.Inventory.Remove(this);
+                GameLoop.Instance.RegisterTickable(this);
             }
         }
 
-        public void StartCountdown()
+        public void Tick(float deltaTime)
         {
+            if (!InEffect) return;
 
+            _elapsedTime += deltaTime;
+            if (_elapsedTime >= EffectTime)
+            {
+                InEffect = false;
+
+                if (Owner != null)
+                    RevertSpecialEffects();
+                
+                GameLoop.Instance.UnregisterTickable(this);
+            }
         }
     }
 }

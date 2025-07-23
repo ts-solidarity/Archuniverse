@@ -148,5 +148,10 @@ namespace Archuniverse.Characters
         {
             return Inventory.Count >= InventoryCapacity;
         }
+
+        public void Print()
+        {
+            Console.WriteLine($"{Name} : HP = {Health}, Mana = {Mana}, HP = {Stamina}");
+        }
     }
 }
