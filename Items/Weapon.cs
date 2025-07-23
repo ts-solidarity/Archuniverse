@@ -34,9 +34,9 @@
 
         public override void Unequip()
         {
-            if (Owner != null)
+            if (Owner != null && Equipped)
             {
-                if (Owner.Inventory.Contains(this) && Owner.EquippedWeapon != this)
+                if (Owner.EquippedWeapon != this)
                     return;
 
                 Owner.EquippedWeapon = null;

@@ -90,10 +90,12 @@ namespace Archuniverse.Items
         public void AddSpecialEffect(ISpecialEffect effect)
         {
             _specialEffects.Add(effect);
+            effect.ApplyEffect(this);
         }
 
         public void RemoveSpecialEffect(ISpecialEffect effect)
         {
+            effect.RevertEffect(this);
             _specialEffects.Remove(effect);
         }
 
@@ -101,7 +103,7 @@ namespace Archuniverse.Items
         {
             foreach (var effect in _specialEffects)
             {
-                effect.Apply(this);
+                effect.ApplyEffect(this);
             }
         }
 
