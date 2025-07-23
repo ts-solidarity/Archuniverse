@@ -22,25 +22,33 @@ namespace Archuniverse.Characters
         public int MaxHealth { get; set; } = 100;
         public int MaxMana { get; set; } = 100;
         public int MaxStamina { get; set; } = 100;
+        public int HealthRegeneration { get; set; } = 1;
+        public int ManaRegeneration { get; set; } = 1;
+        public int StaminaRegeneration { get; set; } = 1;
 
         public int BaseAttack { get; set; } = 10;
         public int BaseDefence { get; set; } = 10;
 
         public int Xp { get; set; }
         public int Level { get; set; }
+        public double Speed { get; set; } = 1.0;
+        public double X { get; set; } = 0.0;
+        public double Y { get; set; } = 0.0;
+        public double Z { get; set; } = 0.0;
 
         public bool IsDead => Health <= 0;
         public bool IsAlive => !IsDead;
         public bool IsAtFullHealth => Health == MaxHealth;
         public bool IsWounded => Health < MaxHealth && Health > 0;
-
+        public SkillTree Skills { get; set; }
 
         private int _health;
         private int _mana;
         private int _stamina;
 
 
-        public LivingEntity(string name, int health, int mana, int stamina, int xp, int level)
+        public LivingEntity(string name, int health, int mana, int stamina, int xp, 
+            int level, double speed, int baseAttack, int baseDefence)
         {
             Name = name;
             Health = health;
@@ -48,8 +56,32 @@ namespace Archuniverse.Characters
             Stamina = stamina;
             Xp = xp;
             Level = level;
+            Speed = speed;
+            BaseAttack = baseAttack;
+            BaseDefence = baseDefence;
+            Skills = new(this);
 
             LevelUpBasedOnXp();
+        }
+
+
+        public virtual void RegenerateHealth()
+        {
+            Health += HealthRegeneration;
+        }
+        public virtual void RegenerateMana()
+        {
+            Mana += ManaRegeneration;
+        }
+        public virtual void RegenerateStamina()
+        {
+            Stamina += StaminaRegeneration;
+        }
+        public virtual void RegenerateVitals()
+        {
+            RegenerateHealth();
+            RegenerateMana();
+            RegenerateStamina();
         }
 
         public virtual int CalculateTotalAttack()
@@ -70,8 +102,14 @@ namespace Archuniverse.Characters
         {
             while (Xp >= XpRequiredForLevel(Level + 1))
             {
-                Level++;
+                LevelUp();
             }
+        }
+
+        public void LevelUp()
+        {
+            Level++;
+            Skills.GainSkillPoint();
         }
 
         private static int XpRequiredForLevel(int level)

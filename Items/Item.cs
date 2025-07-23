@@ -14,7 +14,7 @@ namespace Archuniverse.Items
         public bool Used { get; set; } = false;
         public int AttackValue { get; set; } = 0;
         public int DefenceValue { get; set; } = 0;
-        private readonly List<ISpecialEffect> _specialEffects  = [];
+        private readonly List<IEffect> _specialEffects  = [];
 
         public Item(string name, Type type, Grade grade, int worth)
         {
@@ -24,7 +24,7 @@ namespace Archuniverse.Items
             Worth = worth;
         }
 
-        public Item(string name, Type type, Grade grade, int worth, List<ISpecialEffect> specialEffects)
+        public Item(string name, Type type, Grade grade, int worth, List<IEffect> specialEffects)
         {
             ItemName = name;
             ItemType = type;
@@ -44,7 +44,7 @@ namespace Archuniverse.Items
         }
 
         public Item(string name, Type type, Grade grade, int worth, 
-            int attackValue, int defenceValue, List<ISpecialEffect> specialEffects)
+            int attackValue, int defenceValue, List<IEffect> specialEffects)
         {
             ItemName = name;
             ItemType = type;
@@ -90,13 +90,13 @@ namespace Archuniverse.Items
             return AttackValue;
         }
 
-        public void AddSpecialEffect(ISpecialEffect effect)
+        public void AddSpecialEffect(IEffect effect)
         {
             _specialEffects.Add(effect);
             effect.ApplyEffect(this);
         }
 
-        public void RemoveSpecialEffect(ISpecialEffect effect)
+        public void RemoveSpecialEffect(IEffect effect)
         {
             effect.RevertEffect(this);
             _specialEffects.Remove(effect);

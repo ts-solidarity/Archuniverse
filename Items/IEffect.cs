@@ -1,15 +1,14 @@
 ﻿
 namespace Archuniverse.Items
 {
-    public interface ISpecialEffect
+    public interface IEffect
     {
         void ApplyEffect(Item item);
         void RevertEffect(Item item);
     }
 
 
-
-    public abstract class ArmorSpecialEffect : ISpecialEffect
+    public abstract class ArmorSpecialEffect : IEffect
     {
         public void ApplyEffect(Item item)
         {
@@ -34,7 +33,7 @@ namespace Archuniverse.Items
     }
 
 
-    public abstract class WeaponSpecialEffect : ISpecialEffect
+    public abstract class WeaponSpecialEffect : IEffect
     {
         public void ApplyEffect(Item item)
         {
@@ -59,7 +58,7 @@ namespace Archuniverse.Items
     }
 
 
-    public abstract class WareSpecialEffect : ISpecialEffect
+    public abstract class WareSpecialEffect : IEffect
     {
         public void ApplyEffect(Item item)
         {
@@ -84,7 +83,7 @@ namespace Archuniverse.Items
     }
 
 
-    public abstract class PotionSpecialEffect : ISpecialEffect
+    public abstract class PotionSpecialEffect : IEffect
     {
         public void ApplyEffect(Item item)
         {

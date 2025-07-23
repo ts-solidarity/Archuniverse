@@ -11,6 +11,7 @@ namespace Archuniverse
         ItemAlreadyOwned,       // Item is alredy owned (Same instance)
         ItemNotInInventory,     // Item is not in inventory
         ItemNotOwned,           // Item owner is different
+        InsufficientLevel,      // Not enough level to take some action
     }
 
     public class Game

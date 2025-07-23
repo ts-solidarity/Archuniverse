@@ -40,7 +40,7 @@ namespace Archuniverse.Items
         }
         public override void Revert(Weapon weapon)
         {
-            weapon.AdditionalAttack += weapon.AttackValue * AttackBoostPercentage / 100;
+            weapon.AdditionalAttack -= weapon.AttackValue * AttackBoostPercentage / 100;
         }
     }
 
@@ -48,16 +48,15 @@ namespace Archuniverse.Items
     {
         public override void Effect(Ware ware)
         {
-            if (ware.Owner.Gender == Character.Sex.Male)
-            {
-                ware.Owner.Gender = Character.Sex.Female;
-                return;
-            }
-
-            ware.Owner.Gender = Character.Sex.Male;
+            ToggleGender(ware);
         }
 
         public override void Revert(Ware ware)
+        {
+            ToggleGender(ware);
+        }
+
+        private void ToggleGender(Ware ware)
         {
             if (ware.Owner.Gender == Character.Sex.Male)
             {

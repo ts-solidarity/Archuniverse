@@ -17,8 +17,9 @@ namespace Archuniverse.Characters
             Female, Male
         }
 
-        public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, int level)
-            : base(name, health, mana, stamina, xp, level)
+        public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, 
+            int level, double speed, int baseAttack, int baseDefence)
+            : base(name, health, mana, stamina, xp, level, speed, baseAttack, baseDefence)
         {
             Gender = gender;
             Gold = gold;
@@ -69,7 +70,7 @@ namespace Archuniverse.Characters
         {
             if (Inventory.Contains(item))
                 return Result.ItemAlreadyOwned;
-            if (Inventory.Count + 1 > InventoryCapacity)
+            if (IsInventoryFull())
                 return Result.InventoryFull;
 
             Inventory.Add(item);
@@ -95,6 +96,8 @@ namespace Archuniverse.Characters
                 return Result.ItemNotOwned;
             if (!Inventory.Contains(item))
                 return Result.ItemNotInInventory;
+            if (other.IsInventoryFull())
+                return Result.InventoryFull;
 
             Inventory.Remove(item);
             other.AddItem(item);
@@ -141,5 +144,9 @@ namespace Archuniverse.Characters
             return Result.Success;
         }
 
+        public bool IsInventoryFull()
+        {
+            return Inventory.Count >= InventoryCapacity;
+        }
     }
 }
