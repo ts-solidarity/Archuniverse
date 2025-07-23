@@ -1,11 +1,16 @@
-﻿namespace Archuniverse
+﻿namespace Archuniverse.Items
 {
     public class Weapon : Item
     {
-        public Weapon(string name, Grade grade, int worth, int attackValue) 
-            : base(name, Type.Weapon, grade, worth)
+
+        public int AdditionalAttack { get; set; } = 0;
+        public int AdditionalDefence { get; set; } = 0;
+
+
+        public Weapon(string name, Grade grade, int worth, int attackValue, int defenceValue) 
+            : base(name, Type.Weapon, grade, worth, attackValue, defenceValue)
         {
-            AttackValue = attackValue;
+            
         }
 
         public override void Equip()
@@ -23,6 +28,7 @@
 
                 Owner.EquippedWeapon = this;
                 Owner.Inventory.Remove(this);
+                Equipped = true;
             }
         }
 
@@ -33,11 +39,19 @@
                 if (Owner.Inventory.Contains(this) && Owner.EquippedWeapon != this)
                     return;
 
-                Owner.EquippedArmor = null;
+                Owner.EquippedWeapon = null;
                 Owner.Inventory.Add(this);
+                Equipped = false;
             }
         }
 
-        public int AttackValue { get; set; }
+        public override int CalculateTotalAttack()
+        {
+            return base.CalculateTotalAttack() + AdditionalAttack;
+        }
+        public override int CalculateTotalDefence()
+        {
+            return base.CalculateTotalDefence() + AdditionalDefence;
+        }
     }
 }

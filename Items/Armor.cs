@@ -1,16 +1,15 @@
-﻿
-namespace Archuniverse
+﻿namespace Archuniverse.Items
 {
     public class Armor : Item
     {
-        public Armor(string name, Grade grade, int worth, int defenceBoost) 
-            : base(name, Type.Armor, grade, worth)
+
+        public int AdditionalDefence { get; set; } = 0;
+
+        public Armor(string name, Grade grade, int worth, int defenceValue) 
+            : base(name, Type.Armor, grade, worth, 0, defenceValue)
         {
-            DefenceBoost = defenceBoost;
+
         }
-
-
-        public int DefenceBoost{ get; set; }
 
         public override void Equip()
         {
@@ -27,6 +26,7 @@ namespace Archuniverse
 
                 Owner.EquippedArmor = this;
                 Owner.Inventory.Remove(this);
+                Equipped = true;
             }
         }
 
@@ -39,8 +39,15 @@ namespace Archuniverse
 
                 Owner.EquippedArmor = null;
                 Owner.Inventory.Add(this);
+                Equipped = false;
             }
         }
+
+        public override int CalculateTotalDefence() 
+        {
+            return base.CalculateTotalDefence() + AdditionalDefence; 
+        }
+
 
     }
 }

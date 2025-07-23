@@ -1,4 +1,4 @@
-﻿namespace Archuniverse
+﻿namespace Archuniverse.Items
 {
     public class Food : Item
     {

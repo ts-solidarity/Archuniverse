@@ -1,4 +1,6 @@
-﻿namespace Archuniverse
+﻿using Archuniverse.Items;
+
+namespace Archuniverse
 {
     internal class Program
     {
@@ -9,7 +11,12 @@
             Character Lila = new("Lila", Character.Sex.Female, 80, 200, 90, 1500, 0, 1);
 
             Armor TurtoiseArmor = new("Turtoise Armor", Item.Grade.Rare, 10000, 50);
-            Weapon EternalSword = new("Eternal Sword", Item.Grade.Heroic, 50000, 80);
+            Weapon EternalSword = new("Eternal Sword", Item.Grade.Heroic, 50000, 80, 20);
+
+            Ware CursedStone = new("Cursed Stone", Item.Grade.Legendary, 3500);
+            CursedStone.AddSpecialEffect(new GenderCurse());
+            Lila.AddItem(CursedStone);
+            CursedStone.ApplySpecialEffects();
 
             Izroth.AddItem(TurtoiseArmor);
             Lila.AddItem(EternalSword);
@@ -17,10 +24,12 @@
             Izroth.Equip(TurtoiseArmor);
             Lila.Equip(EternalSword);
 
-            Izroth.Unequip(TurtoiseArmor);
-            Lila.BuyItem(TurtoiseArmor, 1000, Izroth);
+            Lila.Unequip(EternalSword);
+            Lila.SellItem(EternalSword, 500, Izroth);
 
-            Lila.Equip(TurtoiseArmor);
+            Izroth.Equip(EternalSword);
+
+            Lila.AddXp(2600);
             
         }
     }
