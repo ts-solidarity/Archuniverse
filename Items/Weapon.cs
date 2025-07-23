@@ -29,6 +29,7 @@
                 Owner.EquippedWeapon = this;
                 Owner.Inventory.Remove(this);
                 Equipped = true;
+                ApplySpecialEffects();
             }
         }
 
@@ -42,6 +43,7 @@
                 Owner.EquippedWeapon = null;
                 Owner.Inventory.Add(this);
                 Equipped = false;
+                RevertSpecialEffects();
             }
         }
 

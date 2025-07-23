@@ -1,4 +1,6 @@
-﻿namespace Archuniverse.Items
+﻿using Archuniverse.Characters;
+
+namespace Archuniverse.Items
 {
     public class Solidness : ArmorSpecialEffect
     {

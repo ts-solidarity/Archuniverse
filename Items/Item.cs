@@ -1,4 +1,6 @@
 ﻿
+using Archuniverse.Characters;
+
 namespace Archuniverse.Items
 {
     public abstract class Item : Base
@@ -41,7 +43,8 @@ namespace Archuniverse.Items
             DefenceValue = defenceValue;
         }
 
-        public Item(string name, Type type, Grade grade, int worth, int attackValue, int defenceValue, List<ISpecialEffect> specialEffects)
+        public Item(string name, Type type, Grade grade, int worth, 
+            int attackValue, int defenceValue, List<ISpecialEffect> specialEffects)
         {
             ItemName = name;
             ItemType = type;
@@ -107,6 +110,13 @@ namespace Archuniverse.Items
             }
         }
 
+        public void RevertSpecialEffects()
+        {
+            foreach (var effect in _specialEffects)
+            {
+                effect.RevertEffect(this);
+            }
+        }
 
     }
 }

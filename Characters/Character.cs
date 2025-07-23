@@ -1,48 +1,37 @@
-﻿
-using Archuniverse.Items;
+﻿using Archuniverse.Items;
 
-namespace Archuniverse
+namespace Archuniverse.Characters
 {
-    public class Character : Base
+    public class Character : LivingEntity
     {
-        public string Name { get; set; }
         public Sex Gender { get; set; }
-        public int Health { get; set; }
-        public int Mana { get; set; }
-        public int Stamina { get; set; }
         public int Gold { get; set; }
-        public int Xp { get; set; }
-        public int Level { get; set; }
         public List<Item> Inventory { get; set; } = [];
         public Weapon? EquippedWeapon { get; set; }
         public Armor? EquippedArmor { get; set; }
         public int InventoryCapacity { get; set; } = 30;
+
 
         public enum Sex
         {
             Female, Male
         }
 
-        public enum Result
+        public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, int level)
+            : base(name, health, mana, stamina, xp, level)
         {
-            InsufficientGold,       // Not enough gold
-            Success,                // Process completed successfuly
-            InventoryFull,          // Inventory is at max capacity
-            ItemAlreadyOwned,       // Item is alredy owned (Same instance)
-            ItemNotInInventory,     // Item is not in inventory
-            ItemNotOwned,           // Item owner is different
+            Gender = gender;
+            Gold = gold;
         }
 
-        public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, int level)
+        public override int CalculateTotalAttack()
         {
-            Name = name;
-            Gender = gender;
-            Health = health;
-            Mana = mana;
-            Stamina = stamina;
-            Gold = gold;
-            Xp = xp;
-            Level = level;
+            return base.CalculateTotalAttack() + ((EquippedWeapon != null) ? EquippedWeapon.CalculateTotalAttack() : 0);
+        }
+
+        public override int CalculateTotalDefence()
+        {
+            return base.CalculateTotalDefence() + ((EquippedArmor != null) ? EquippedArmor.CalculateTotalDefence() : 0);
         }
 
         public Result Use(Item item)
@@ -150,21 +139,6 @@ namespace Archuniverse
             AddItem(item);
             TransferGold(goldAmount, other);
             return Result.Success;
-        }
-
-        public void AddXp(int amount)
-        {
-            Xp += amount;
-
-            while (Xp >= XpRequiredForLevel(Level + 1))
-            {
-                Level++;
-            }
-        }
-
-        private static int XpRequiredForLevel(int level)
-        {
-            return 100 * level * level;
         }
 
     }
