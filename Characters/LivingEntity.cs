@@ -52,7 +52,8 @@ namespace Archuniverse.Characters
 
 
         public LivingEntity(string name, int health, int mana, int stamina, int xp, 
-            int level, double speed, int baseAttack, int baseDefence)
+            int level, double speed, int baseAttack, int baseDefence,
+            int maxHealth = 100, int maxMana = 100, int maxStamina = 100)
         {
             Name = name;
             Health = health;
@@ -63,6 +64,11 @@ namespace Archuniverse.Characters
             Speed = speed;
             BaseAttack = baseAttack;
             BaseDefence = baseDefence;
+
+            MaxHealth = maxHealth;
+            MaxMana = maxMana;
+            MaxStamina = maxStamina;
+
             Skills = new(this);
 
             LevelUpBasedOnXp();

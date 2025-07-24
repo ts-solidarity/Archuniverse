@@ -6,11 +6,9 @@ namespace Archuniverse
 {
     public class Game
     {
-        public CombatManager CombatManager { get; set; }
 
         public Game()
         {
-            CombatManager = new CombatManager();
         }
     }
 }

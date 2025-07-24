@@ -1,38 +1,64 @@
 ﻿using Archuniverse.Characters;
+using Archuniverse.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Archuniverse.Combat
 {
+    /// <summary>
+    /// Manages all real-time combat encounters. Handles creation, tracking, and cleanup.
+    /// </summary>
     public class CombatManager : Base, ITickable
     {
-        public List<RealtimeCombat> ActiveCombats = [];
-        public List<RealtimeCombat> CompletedCombats = [];
-        private float _elapsedTime = 0f;
+        // Singleton instance
+        private static CombatManager? _instance;
+        public static CombatManager Instance => _instance ??= new CombatManager();
 
-        public CombatManager()
+        private CombatManager()
         {
             GameLoop.Instance.RegisterTickable(this);
         }
 
-        public RealtimeCombat NewCombat(Character firstAttacker, Character firstDefender)
+        public List<RealtimeCombat> ActiveCombats { get; } = new();
+        public List<RealtimeCombat> CompletedCombats { get; } = new();
+
+        private float _elapsedTime = 0f;
+
+        /// <summary>
+        /// Starts a new combat encounter between two characters.
+        /// </summary>
+        public RealtimeCombat NewCombat(Character attacker, Character defender)
         {
-            RealtimeCombat newCombat;
-            newCombat = new RealtimeCombat(firstAttacker, firstDefender);
-            ActiveCombats.Add(newCombat);
-            return newCombat;
+            var combat = new RealtimeCombat(attacker, defender);
+            ActiveCombats.Add(combat);
+            return combat;
         }
 
-        public void Update()
+        /// <summary>
+        /// Periodically checks active combats and finalizes those that are over.
+        /// </summary>
+        private void Update()
         {
-            foreach (RealtimeCombat combat in ActiveCombats.ToList())
+            foreach (var combat in ActiveCombats.ToList())
             {
                 if (combat.IsFightOver)
                 {
+                    // XP reward logic
+                    if (combat.Winner is Character winner && combat.Loser is Character loser)
+                    {
+                        winner.AddXp(200 * loser.Level); // Simple XP formula
+                    }
+
                     ActiveCombats.Remove(combat);
                     CompletedCombats.Add(combat);
                 }
             }
         }
 
+        /// <summary>
+        /// Called every frame with deltaTime from GameLoop.
+        /// Handles periodic update calls.
+        /// </summary>
         public void Tick(float deltaTime)
         {
             _elapsedTime += deltaTime;

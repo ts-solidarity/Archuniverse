@@ -4,8 +4,10 @@ namespace Archuniverse.Combat
 {
     public class RealtimeCombat : Base, ITickable
     {
-        public Character Fighter1 { get; set; }
-        public Character Fighter2 { get; set; }
+        public LivingEntity Fighter1 { get; set; }
+        public LivingEntity Fighter2 { get; set; }
+        public LivingEntity? Winner {  get; set; }
+        public LivingEntity? Loser {  get; set; }
         public bool IsFightOver => Fighter1.IsDead || Fighter2.IsDead;
         public List<Damage> Damages { get; set; } = [];
 
@@ -14,14 +16,14 @@ namespace Archuniverse.Combat
         private float _fighter2Cooldown = 0f;
         private readonly float _baseAttackSpeed = 1.0f; // Base attack every 1 second
 
-        public RealtimeCombat(Character fighter1, Character fighter2)
+        public RealtimeCombat(LivingEntity fighter1, LivingEntity fighter2)
         {
             Fighter1 = fighter1;
             Fighter2 = fighter2;
             GameLoop.Instance.RegisterTickable(this);
         }
 
-        public void Fight(Character attacker, Character defender)
+        public void Fight(LivingEntity attacker, LivingEntity defender)
         {
             (FightType attackType, int attackAmount) = attacker.CalculateAttack();
             (FightType defenceType, int defenceAmount) = defender.CalculateDefence();
@@ -41,7 +43,12 @@ namespace Archuniverse.Combat
                 else
                 {
                     Console.WriteLine($"{defender.Name} couldn't defend!");
-                    defenceAmount = defender.EquippedArmor?.CalculateTotalDefence() ?? 0;
+
+                    if (defender is Character character)
+                    {
+                        defenceAmount = character.EquippedArmor?.CalculateTotalDefence() ?? 0;
+                    }
+
                     int damageAmount = Math.Max(0, attackAmount - defenceAmount);
                     Damage damage = new(attackType, damageAmount, defender);
                     Console.WriteLine($"{attacker.Name} hits {defender.Name} for {damageAmount} ({attackType})");
@@ -62,9 +69,17 @@ namespace Archuniverse.Combat
                     GameLoop.Instance.UnregisterTickable(Fighter2);
                 }
                 else if (Fighter1.IsDead)
+                {
                     GameLoop.Instance.UnregisterTickable(Fighter1);
+                    Winner = Fighter2;
+                    Loser = Fighter1;
+                }
                 else
+                {
                     GameLoop.Instance.UnregisterTickable(Fighter2);
+                    Winner = Fighter1;
+                    Loser = Fighter2;
+                }
 
                 return;
             }
@@ -88,7 +103,7 @@ namespace Archuniverse.Combat
             }
         }
 
-        private float CalculateAttackCooldown(Character character)
+        private float CalculateAttackCooldown(LivingEntity character)
         {
             // Speed affects attack frequency
             return _baseAttackSpeed / (float)character.Speed;

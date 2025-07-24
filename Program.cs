@@ -43,7 +43,7 @@ namespace Archuniverse
             Lila.Skills.IncreaseAbility(SkillTree.Ability.Melee, 2);
 
 
-            game.CombatManager.NewCombat(Izroth, Lila);
+            CombatManager.Instance.NewCombat(Izroth, Lila);
 
 
             Task.Run(() => GameLoop.Instance.Run());

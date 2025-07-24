@@ -5,7 +5,7 @@ namespace Archuniverse.Items
 {
     public abstract class Item : Base
     {
-        public string ItemName { get; set; }
+        public string Name { get; set; }
         public Type ItemType { get; set; }
         public Grade ItemGrade { get; set; }
         public int Worth { get; set; }
@@ -18,7 +18,7 @@ namespace Archuniverse.Items
 
         public Item(string name, Type type, Grade grade, int worth)
         {
-            ItemName = name;
+            Name = name;
             ItemType = type;
             ItemGrade = grade;
             Worth = worth;
@@ -26,7 +26,7 @@ namespace Archuniverse.Items
 
         public Item(string name, Type type, Grade grade, int worth, List<IEffect> specialEffects)
         {
-            ItemName = name;
+            Name = name;
             ItemType = type;
             ItemGrade = grade;
             Worth = worth;
@@ -35,7 +35,7 @@ namespace Archuniverse.Items
 
         public Item(string name, Type type, Grade grade, int worth, int attackValue, int defenceValue)
         {
-            ItemName = name;
+            Name = name;
             ItemType = type;
             ItemGrade = grade;
             Worth = worth;
@@ -46,7 +46,7 @@ namespace Archuniverse.Items
         public Item(string name, Type type, Grade grade, int worth, 
             int attackValue, int defenceValue, List<IEffect> specialEffects)
         {
-            ItemName = name;
+            Name = name;
             ItemType = type;
             ItemGrade = grade;
             Worth = worth;

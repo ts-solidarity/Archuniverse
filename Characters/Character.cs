@@ -18,8 +18,10 @@ namespace Archuniverse.Characters
         }
 
         public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, 
-            int level, float speed, int baseAttack, int baseDefence)
-            : base(name, health, mana, stamina, xp, level, speed, baseAttack, baseDefence)
+            int level, float speed, int baseAttack, int baseDefence,
+            int maxHealth = 100, int maxMana = 100, int maxStamina = 100)
+            : base(name, health, mana, stamina, xp, level, speed, baseAttack, baseDefence,
+                  maxHealth, maxMana, maxStamina)
         {
             Gender = gender;
             Gold = gold;
