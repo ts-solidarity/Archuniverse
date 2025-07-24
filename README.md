@@ -1,5 +1,3 @@
-# Archuniverse
-
 # Archuniverse RPG Combat Engine
 
 Archuniverse is a modular, object-oriented C# RPG framework featuring a real-time combat system, item management, inventory logic, stat progression, and a customizable skill tree architecture. Designed with extensibility and future Unity integration in mind, it provides a scalable foundation for both single-player and networked RPG gameplay.
