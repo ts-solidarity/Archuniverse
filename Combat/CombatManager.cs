@@ -4,26 +4,26 @@ namespace Archuniverse.Combat
 {
     public class CombatManager : Base, ITickable
     {
-
-        public List<Combat> ActiveCombats = [];
-        public List<Combat> CompletedCombats = [];
+        public List<RealtimeCombat> ActiveCombats = [];
+        public List<RealtimeCombat> CompletedCombats = [];
         private float _elapsedTime = 0f;
 
-        public CombatManager() 
+        public CombatManager()
         {
-            
+            GameLoop.Instance.RegisterTickable(this);
         }
 
-        public Combat NewCombat(Character firstAttacker, Character firstDefender)
+        public RealtimeCombat NewCombat(Character firstAttacker, Character firstDefender)
         {
-            Combat newCombat = new Combat(firstAttacker, firstDefender);
+            RealtimeCombat newCombat;
+            newCombat = new RealtimeCombat(firstAttacker, firstDefender);
             ActiveCombats.Add(newCombat);
             return newCombat;
         }
 
         public void Update()
         {
-            foreach (Combat combat in ActiveCombats.ToList())
+            foreach (RealtimeCombat combat in ActiveCombats.ToList())
             {
                 if (combat.IsFightOver)
                 {
@@ -43,6 +43,5 @@ namespace Archuniverse.Combat
                 Update();
             }
         }
-
     }
 }

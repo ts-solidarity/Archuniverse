@@ -69,7 +69,7 @@ namespace Archuniverse.Characters
             GameLoop.Instance.RegisterTickable(this);
         }
 
-        public virtual Result Drain(FightType damageType)
+        public virtual Result Drain(FightType damageType, int vitalAmount)
         {
             switch (damageType)
             {
@@ -78,18 +78,18 @@ namespace Archuniverse.Characters
 
                 case FightType.Melee:
 
-                    if (HasEnoughStamina(CalculateStaminaNeedToAttack()))
+                    if (HasEnoughStamina(vitalAmount))
                     {
-                        Stamina -= CalculateStaminaNeedToAttack();
+                        Stamina -= vitalAmount;
                         return Result.Success;
                     }
                     return Result.InsufficientMana;
 
                 case FightType.Magic:
                     
-                    if (HasEnoughMana(CalculateManaNeedToAttack()))
+                    if (HasEnoughMana(vitalAmount))
                     {
-                        Mana -= CalculateManaNeedToAttack();
+                        Mana -= vitalAmount;
                         return Result.Success;
                     }
                     return Result.InsufficientMana;

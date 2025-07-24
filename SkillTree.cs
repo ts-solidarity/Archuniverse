@@ -84,13 +84,17 @@ public class SkillTree : Base
         return false;
     }
 
-    public bool IncreaseAbility(Ability ability)
+    public bool IncreaseAbility(Ability ability, int amount = 1)
     {
-        if (UnusedSkillPoints <= 0)
+        if (UnusedSkillPoints < amount)
             return false;
 
-        Abilities[ability] += 1;
-        UnusedSkillPoints -= 1;
+        for (int i = 0; i < amount; i++)
+        {
+            Abilities[ability] += 1;
+            UnusedSkillPoints -= 1;
+        }
+
         UpdateStats();
         return true;
     }

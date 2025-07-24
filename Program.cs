@@ -25,7 +25,7 @@ namespace Archuniverse
             Armor OrdinaryArmor1 = new("Ordinary Armor", Item.Grade.Ordinary, 100, 15);
             Weapon OrdinaryWeapon1 = new("Ordinary Weapon", Item.Grade.Ordinary, 100, 35, 5);
 
-            Armor OrdinaryArmor2 = new("Ordinary Armor", Item.Grade.Ordinary, 100, 15);
+            Armor OrdinaryArmor2 = new("Ordinary Armor", Item.Grade.Ordinary, 100, 25);
             Weapon OrdinaryWeapon2 = new("Ordinary Weapon", Item.Grade.Ordinary, 100, 35, 5);
 
 
@@ -34,6 +34,14 @@ namespace Archuniverse
             
             Lila.AddAndEquipItem(OrdinaryArmor2);
             Lila.AddAndEquipItem(OrdinaryWeapon2);
+
+
+            Izroth.AddXp(1750);
+            Izroth.Skills.IncreaseAbility(SkillTree.Ability.Melee, 3);
+
+            Lila.AddXp(1000);
+            Lila.Skills.IncreaseAbility(SkillTree.Ability.Melee, 2);
+
 
             game.CombatManager.NewCombat(Izroth, Lila);
 
