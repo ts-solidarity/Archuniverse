@@ -30,10 +30,10 @@ namespace Archuniverse.Items
                 Owner.Health += HealthBoost;
                 Owner.Mana += ManaBoost;
                 Owner.Stamina += StaminaBoost;
-                ApplySpecialEffects();
 
                 InEffect = true;
                 Used = true;
+                ApplySpecialEffects();
 
 
                 Owner.Inventory.Remove(this);

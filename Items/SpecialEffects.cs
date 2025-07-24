@@ -67,4 +67,23 @@ namespace Archuniverse.Items
             ware.Owner.Gender = Character.Sex.Male;
         }
     }
+
+    public class HealthGenerationBoost : PotionSpecialEffect
+    {
+        public override void Effect(Potion potion)
+        {
+            if (potion.Owner != null)
+            {
+                potion.Owner.HealthRegeneration *= 2;
+            }
+        }
+
+        public override void Revert(Potion potion)
+        {
+            if (potion.Owner != null)
+            {
+                potion.Owner.HealthRegeneration /= 2;
+            }
+        }
+    }
 }

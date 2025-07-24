@@ -18,21 +18,25 @@ namespace Archuniverse.Characters
         }
 
         public Character(string name, Sex gender, int health, int mana, int stamina, int gold, int xp, 
-            int level, double speed, int baseAttack, int baseDefence)
+            int level, float speed, int baseAttack, int baseDefence)
             : base(name, health, mana, stamina, xp, level, speed, baseAttack, baseDefence)
         {
             Gender = gender;
             Gold = gold;
         }
 
-        public override int CalculateTotalAttack()
+        public override int CalculateTotalAttack(FightType optimalFightType)
         {
-            return base.CalculateTotalAttack() + ((EquippedWeapon != null) ? EquippedWeapon.CalculateTotalAttack() : 0);
+            int characterAttack = base.CalculateTotalAttack(optimalFightType);
+            int weaponAttack = (EquippedWeapon != null) ? EquippedWeapon.CalculateTotalAttack() : 0;
+            return characterAttack + weaponAttack;
         }
 
-        public override int CalculateTotalDefence()
+        public override int CalculateTotalDefence(FightType optimalFightType)
         {
-            return base.CalculateTotalDefence() + ((EquippedArmor != null) ? EquippedArmor.CalculateTotalDefence() : 0);
+            int characterAttack = base.CalculateTotalDefence(optimalFightType);
+            int weaponAttack = (EquippedArmor != null) ? EquippedArmor.CalculateTotalDefence() : 0;
+            return characterAttack + weaponAttack;
         }
 
         public Result Use(Item item)
@@ -143,6 +147,21 @@ namespace Archuniverse.Characters
             TransferGold(goldAmount, other);
             return Result.Success;
         }
+        
+        public Result AddAndEquipItem(Item item)
+        {
+            Result result1 =  AddItem(item);
+
+            if (result1 != Result.Success)
+                return result1;
+
+            Result result2 = Equip(item);
+
+            if (result2 != Result.Success)
+                return result2;
+
+            return Result.Success;
+        }
 
         public bool IsInventoryFull()
         {
@@ -151,7 +170,10 @@ namespace Archuniverse.Characters
 
         public void Print()
         {
-            Console.WriteLine($"{Name} : HP = {Health}, Mana = {Mana}, HP = {Stamina}");
+            string vitals = $"HP = { Health}, Mana = { Mana}, Stamina = { Stamina}";
+            string alive = IsDead ? "DEAD " : "ALIVE ";
+
+            Console.WriteLine($"{Name} " + alive + vitals);
         }
     }
 }

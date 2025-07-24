@@ -1,4 +1,6 @@
-﻿
+﻿using Archuniverse.Combat;
+
+
 namespace Archuniverse.Characters
 {
     public class LivingEntity : Base, ITickable
@@ -28,6 +30,8 @@ namespace Archuniverse.Characters
 
         public int BaseAttack { get; set; } = 10;
         public int BaseDefence { get; set; } = 10;
+        public int Melee { get; set; } = 0;
+        public int Magic { get; set; } = 0;
 
         public int Xp { get; set; }
         public int Level { get; set; }
@@ -62,8 +66,178 @@ namespace Archuniverse.Characters
             Skills = new(this);
 
             LevelUpBasedOnXp();
+            GameLoop.Instance.RegisterTickable(this);
         }
 
+        public virtual Result Drain(FightType damageType)
+        {
+            switch (damageType)
+            {
+                case FightType.Natural:
+                    return Result.Cancelled;
+
+                case FightType.Melee:
+
+                    if (HasEnoughStamina(CalculateStaminaNeedToAttack()))
+                    {
+                        Stamina -= CalculateStaminaNeedToAttack();
+                        return Result.Success;
+                    }
+                    return Result.InsufficientMana;
+
+                case FightType.Magic:
+                    
+                    if (HasEnoughMana(CalculateManaNeedToAttack()))
+                    {
+                        Mana -= CalculateManaNeedToAttack();
+                        return Result.Success;
+                    }
+                    return Result.InsufficientMana;
+
+                default:
+                    return Result.Cancelled;
+            }
+        }
+
+        public bool HasEnoughHealth(int amount)
+        {
+            return (Health >= amount);
+        }
+        public bool HasEnoughMana(int amount)
+        {
+            return (Mana >= amount);
+        }
+        public bool HasEnoughStamina(int amount)
+        {
+            return (Stamina >= amount);
+        }
+
+        public virtual int CalculateMeleeDamage()
+        {
+            return BaseAttack + Melee;
+        }
+        public virtual int CalculateMagicDamage()
+        {
+            return BaseAttack + Magic;
+        }
+
+        public virtual int CalculateMeleeDefence()
+        {
+            return BaseDefence + Melee;
+        }
+        public virtual int CalculateMagicDefence()
+        {
+            return BaseDefence + Magic;
+        }
+
+        public virtual int CalculateManaNeedToAttack()
+        {
+            return (int)(15.0f * ((100.0f - Level) / 100.0f));
+        }
+
+        public virtual int CalculateStaminaNeedToAttack()
+        {
+            return (int)(15.0f * ((100.0f - Level) / 100.0f));
+        }
+        public virtual int CalculateManaNeedToDefend()
+        {
+            return (int)(7.5f * ((100.0f - Level) / 100.0f));
+        }
+
+        public virtual int CalculateStaminaNeedToDefend()
+        {
+            return (int)(7.5f * ((100.0f - Level) / 100.0f));
+        }
+
+        public virtual FightType CalculateOptimalAttackType()
+        {
+            int meleeAttack = CalculateMeleeDamage();
+            int magicAttack = CalculateMagicDamage();
+
+            int staminaNeed = CalculateStaminaNeedToAttack();
+            int manaNeed = CalculateManaNeedToAttack();
+
+            bool hasStamina = HasEnoughStamina(staminaNeed);
+            bool hasMana = HasEnoughMana(manaNeed);
+
+            if (hasStamina && hasMana)
+            {
+                if (meleeAttack >= magicAttack)
+                    return FightType.Melee;
+                return FightType.Magic;
+            }
+            else if (hasStamina)
+                return FightType.Melee;
+            else if (hasMana)
+                return FightType.Magic;
+            else
+                return FightType.CannotAttack;
+        }
+
+        public virtual FightType CalculateOptimalDefenceType()
+        {
+            int meleeDefence = CalculateMeleeDefence();
+            int magicDefence = CalculateMagicDefence();
+
+            int staminaNeed = CalculateStaminaNeedToDefend();
+            int manaNeed = CalculateManaNeedToDefend();
+
+            bool hasStamina = HasEnoughStamina(staminaNeed);
+            bool hasMana = HasEnoughMana(manaNeed);
+
+            if (hasStamina && hasMana)
+            {
+                if (meleeDefence >= magicDefence)
+                    return FightType.Melee;
+                return FightType.Magic;
+            }
+            else if (hasStamina)
+                return FightType.Melee;
+            else if (hasMana)
+                return FightType.Magic;
+            else
+                return FightType.CannotDefend;
+        }
+
+        public virtual int CalculateTotalAttack(FightType optimalFightType)
+        {
+            switch(optimalFightType)
+            {
+                default:
+                    return CalculateMeleeDamage();
+                case FightType.Magic:
+                    return CalculateMagicDamage();
+                case FightType.Melee:
+                    return CalculateMeleeDamage();
+            }
+        }
+
+        public virtual int CalculateTotalDefence(FightType optimalFightType)
+        {
+            switch (optimalFightType)
+            {
+                default:
+                    return CalculateMeleeDefence();
+                case FightType.Magic:
+                    return CalculateMagicDefence();
+                case FightType.Melee:
+                    return CalculateMeleeDefence();
+            }
+        }
+
+        public virtual (FightType, int) CalculateAttack()
+        {
+            FightType optimalFightType = CalculateOptimalAttackType();
+            int attackAmount = CalculateTotalAttack(optimalFightType);
+            return (optimalFightType, attackAmount);
+        }
+
+        public virtual (FightType, int) CalculateDefence()
+        {
+            FightType optimalFightType = CalculateOptimalDefenceType();
+            int defenceAmount = CalculateTotalDefence(optimalFightType);
+            return (optimalFightType, defenceAmount);
+        }
 
         public virtual void RegenerateHealth()
         {
@@ -84,15 +258,6 @@ namespace Archuniverse.Characters
             RegenerateStamina();
         }
 
-        public virtual int CalculateTotalAttack()
-        {
-            return BaseAttack;
-        }
-
-        public virtual int CalculateTotalDefence()
-        {
-            return BaseDefence;
-        }
         public void AddXp(int amount)
         {
             Xp += amount;

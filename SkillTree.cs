@@ -1,9 +1,15 @@
 ﻿using Archuniverse;
 using Archuniverse.Characters;
-using System.Net.Http.Headers;
 
 public class SkillTree : Base
 {
+    public enum Ability
+    {
+        Melee, Magic
+    }
+
+    public Dictionary<Ability, int> Abilities { get; set; }
+
     public LivingEntity Owner { get; }
     public List<Skill> AllSkills { get; } = [];
     public int UnusedSkillPoints { get; private set; } = 0;
@@ -11,6 +17,15 @@ public class SkillTree : Base
     public SkillTree(LivingEntity owner)
     {
         Owner = owner;
+
+
+        Abilities = new Dictionary<Ability, int>
+        {
+            {Ability.Melee, 1 },
+            {Ability.Magic, 1 },
+        };
+
+
         var strongBody = new Skill("Strong Body", "Increases Max Health by 50", 2,
             entity => entity.MaxHealth += 50);
 
@@ -37,6 +52,12 @@ public class SkillTree : Base
         AddSkill(ironBody);
     }
 
+    public void UpdateStats()
+    {
+        Owner.Melee = Abilities[Ability.Melee] * 5;
+        Owner.Magic = Abilities[Ability.Magic] * 5;
+    }
+
     public void AddSkill(Skill skill)
     {
         if (!AllSkills.Contains(skill))
@@ -61,5 +82,16 @@ public class SkillTree : Base
         }
 
         return false;
+    }
+
+    public bool IncreaseAbility(Ability ability)
+    {
+        if (UnusedSkillPoints <= 0)
+            return false;
+
+        Abilities[ability] += 1;
+        UnusedSkillPoints -= 1;
+        UpdateStats();
+        return true;
     }
 }
